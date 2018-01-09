@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Narcissus</title>
+        <meta charset="utf-8" />
+
+        <link rel="stylesheet" type="text/css" href="css/helpers.css" />
+        <link rel="stylesheet" type="text/css" href="css/app.css" />
+    </head>
+
+    <body>
+        <div class="off-screen">
+            <video id="camera"></video>
+            <canvas id="converter"></canvas>
+            <canvas id="comparator"></canvas>
+            <canvas id="masker"></canvas>
+            <canvas id="compositor"></canvas>
+        </div>
+
+        <!-- TODO: Uncomment when ready.
+        <canvas id="stream"></canvas>
+        -->
+
+
+        <!-- Overlay Menu -->
+        <div id="menu">
+            <div>
+                <h1>Setup</h1>
+            </div>
+
+            <div>
+                <h4>Select Webcam</h4>
+                <select id="device-list"></select>
+            </div>
+
+            <div>
+                <h4>Select Background</h4>
+                <div>
+                    <img id="background-preview" />
+                </div>
+                <button id="select-background" type="button">Choose</button>
+            </div>
+
+            <div>
+                <h4>Take Reference Photo</h4>
+                <div>
+                    <canvas id="reference"></canvas>
+                </div>
+                <button id="take-reference" type="button">Capture</button>
+            </div>
+        </div>
+
+    </body>
+
+    <footer>
+        <!-- Electron Window Hook Start -->
+        <script>
+            if (typeof module === 'object') {
+                window.module = module;
+                module = undefined;
+            }
+        </script>
+
+        <!-- jQuery -->
+        <script src="js/jquery/jquery.js"></script>
+
+        <!-- Narcissus -->
+        <script src="js/narcissus/camera.js"></script>
+        <script src="js/narcissus/comparator.js"></script>
+
+        <!-- Main -->
+        <script src="main.js"></script>
+
+        <!-- Electron Window Hook End -->
+        <script>
+            if (window.module) {
+                module = window.module;
+            }
+        </script>
+    </footer>
+</html>
