@@ -18,16 +18,16 @@ let converterHandle = document.getElementById('converter');
 let converterContext = converterHandle.getContext('2d');
 
 let comparatorHandle = document.getElementById('comparator');
-let comparatorContext = converterHandle.getContext('2d');
+let comparatorContext = comparatorHandle.getContext('2d');
 
 let maskerHandle = document.getElementById('masker');
-let maskerContext = converterHandle.getContext('2d');
+let maskerContext = maskerHandle.getContext('2d');
 
 let compositorHandle = document.getElementById('compositor');
-let compositorContext = converterHandle.getContext('2d');
+let compositorContext = compositorHandle.getContext('2d');
 
 //let streamHandle = document.getElementById('stream');
-//let streamContext = converterHandle.getContext('2d');
+//let streamContext = streamHandle.getContext('2d');
 
 let referenceHandle = document.getElementById('reference');
 let referenceContext = referenceHandle.getContext('2d');
@@ -35,6 +35,10 @@ let referenceContext = referenceHandle.getContext('2d');
 // Reference.
 let referenceButton = document.getElementById('take-reference');
 let referenceDelay = 3;
+let referenceTaken = false;
+
+// Comparator.
+let comparatorMatchThreshold = 0.1;
 
 // Begin main.
 let beginMain = function () {
@@ -45,7 +49,23 @@ let beginMain = function () {
 let loop = function () {
     main = requestAnimationFrame(loop);
 
+    converterContext.save();
+    converterContext.clearRect(0, 0, width, height);
     converterContext.drawImage(cameraHandle, 0, 0, width, height);
+    converterContext.restore();
+
+    if (referenceTaken) {
+        let referenceFrame = referenceContext.getImageData(0, 0, width, height);
+        let converterFrame = converterContext.getImageData(0, 0, width, height);
+        let comparatorFrame = comparatorContext.createImageData(width, height);
+
+        createMask(referenceFrame.data, converterFrame.data, comparatorFrame.data, width, height, comparatorMatchThreshold);
+
+        comparatorContext.save();
+        comparatorContext.clearRect(0, 0, width, height);
+        comparatorContext.putImageData(comparatorFrame, 0, 0);
+        comparatorContext.restore();
+    }
 }
 
 /* Ready to go. */
@@ -78,6 +98,7 @@ $(function() {
             if (count === 0) {
                 clearInterval(referenceCountdown);
                 referenceContext.drawImage(converterHandle, 0, 0, width, height);
+                referenceTaken = true;
             } else {
                 count--;
             }

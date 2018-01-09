@@ -11,7 +11,6 @@ let createMask = function (input1, input2, output, width, height, threshold) {
     }
 
     let maxDelta = 35215 * threshold * threshold;
-    let differenceCount = 0;
 
     for (let yPos = 0; yPos < height; yPos++) {
         for (let xPos = 0; xPos < width; xPos++) {
@@ -21,15 +20,12 @@ let createMask = function (input1, input2, output, width, height, threshold) {
             if (delta > maxDelta) {
                 if (output) {
                     drawPixel(output, position, white);
-                    differenceCount++;
                 }
             } else if (output) {
                 drawPixel(output, position, black);
             }
         }
     }
-
-    return differenceCount;
 }
 
 let calculateColourDelta = function (input1, input2, position1, position2) {
