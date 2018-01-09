@@ -5,47 +5,52 @@
         <meta charset="utf-8" />
 
         <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous" />
     </head>
 
     <body>
-        <!--
-        <div class="off-screen">
-            <canvas id="reference"></canvas>
-            <canvas id="background"></canvas>
-            <canvas id="converter"></canvas>
-            <canvas id="comparator"></canvas>
-            <canvas id="compositor"></canvas>
-        </div>
-        -->
+        <!-- Overlays -->
+        <div id="loading" class="active"></div>
+        <div id="countdown"></div>
+
+        <!-- Video -->
 
         <video id="camera" class="feed"></video>
         <video id="stream" class="off-screen"></video>
 
-        <!-- Overlay Menu -->
-        <div id="menu">
+        <!-- Menu -->
+        <div id="menu" class="closed">
             <div>
-                <h1>Setup</h1>
+                <h1>Narcissus</h1>
             </div>
 
             <div>
                 <h4>Select Webcam</h4>
-                <select id="device-list"></select>
+                <form class="pure-form">
+                    <select id="device-list"></select>
+                </form>
             </div>
 
             <div>
-                <h4>Select Background Image</h4>
+                <h4>Select Background</h4>
                 <div>
                     <img id="background-image" class="menu-image" />
                 </div>
-                <input id="input-background" type="file" accept="image/*" />
+                <input class="pure-button" value="Choose" type="button" onclick="document.getElementById('input-background').click();" />
+                <input id="input-background" class="pure-button" style="display:none;" type="file" accept="image/*" />
             </div>
 
             <div>
-                <h4>Take Reference Image</h4>
+                <h4>Capture Reference</h4>
                 <div>
                     <img id="reference-image" class="menu-image" />
                 </div>
-                <button id="take-reference" type="button">Capture</button>
+                <button id="take-reference" class="pure-button" type="button">Capture</button>
+            </div>
+
+            <div>
+                <h4 id="threshold-title">Tune Threshold</h4>
+                <input id="threshold-slider" type="range" min="0" max="1" step="0.0001" value="0.01" />
             </div>
         </div>
 

@@ -41,9 +41,11 @@ let referenceDelay = 3;
 let referenceTaken = false;
 
 // Comparator.
-let comparatorMatchThreshold = 0.1;
+let thresholdTitleHandle = document.getElementById('threshold-title');
+let thresholdValueHandle = document.getElementById('threshold-slider');
+let thresholdValue = parseInt(thresholdValueHandle.value);
 
-// Pre Process.
+// Entry.
 setTimeout(function() {
     // Camera.
     if (cameraList.length > 0) {
@@ -70,8 +72,12 @@ setTimeout(function() {
         let count = referenceDelay;
 
         let referenceCountdown = setInterval(function () {
+            document.getElementById('countdown').innerHTML = count;
+
             if (count === 0) {
                 clearInterval(referenceCountdown);
+                document.getElementById('countdown').innerHTML = '';
+
                 referenceContext.drawImage(converterHandle, 0, 0, width, height);
                 referenceImage.src = referenceHandle.toDataURL();
                 referenceTaken = true;
@@ -81,7 +87,7 @@ setTimeout(function() {
         }, 1000);
     });
 
-    // Post Process Entry.
+    // Loop Entry.
     cameraHandle.addEventListener('loadedmetadata', function () {
         width = cameraHandle.videoWidth;
         height = cameraHandle.videoHeight;
@@ -94,16 +100,54 @@ setTimeout(function() {
 
         converterContext.drawImage(cameraHandle, 0, 0, width, height);
 
+        // Disable loading overlay.
+        document.getElementById('loading').classList.remove('active');
+
         beginLoops();
     });
 }, 1000);
 
 // Loops.
 let post;
+let ui;
 
 // Begin loops.
 let beginLoops = function () {
     post = post || requestAnimationFrame(postProcessLoop);
+    ui = ui || requestAnimationFrame(uiLoop);
+}
+
+let uiLoop = function () {
+    ui = requestAnimationFrame(uiLoop);
+
+    if (!referenceTaken) {
+        thresholdTitleHandle.classList.add('disabled');
+        thresholdValueHandle.classList.add('disabled');
+    } else {
+        thresholdTitleHandle.classList.remove('disabled');
+        thresholdValueHandle.classList.remove('disabled');
+
+        if (streamHandle.classList.contains('off-screen')) {
+            cameraHandle.classList.add('off-screen');
+            cameraHandle.classList.remove('feed');
+            streamHandle.classList.add('feed');
+            streamHandle.classList.remove('off-screen');
+        }
+
+        thresholdValue = thresholdValueHandle.value;
+    }
+
+    $(document).mousemove(function(event) {
+        if (event.pageX < 304) {
+            if (document.getElementById('menu').classList.contains('closed')) {
+                document.getElementById('menu').classList.remove('closed');
+            }
+        } else {
+            if (!document.getElementById('menu').classList.contains('closed')) {
+                document.getElementById('menu').classList.add('closed');
+            }
+        }
+    });
 }
 
 // Post Process.
@@ -122,10 +166,8 @@ let postProcessLoop = function () {
     }
 
     // Converter.
-    converterContext.save();
     converterContext.clearRect(0, 0, width, height);
     converterContext.drawImage(cameraHandle, 0, 0, width, height);
-    converterContext.restore();
 
     // Comparator and masker.
     if (referenceTaken) {
@@ -133,21 +175,11 @@ let postProcessLoop = function () {
         let converterFrame = converterContext.getImageData(0, 0, width, height);
         let comparatorFrame = comparatorContext.createImageData(width, height);
 
-        createMask(referenceFrame.data, converterFrame.data, comparatorFrame.data, width, height, comparatorMatchThreshold);
+        createMask(referenceFrame.data, converterFrame.data, comparatorFrame.data, width, height, thresholdValue);
 
-        if (streamHandle.classList.contains('off-screen')) {
-            cameraHandle.classList.add('off-screen');
-            cameraHandle.classList.remove('feed');
-            streamHandle.classList.add('feed');
-            streamHandle.classList.remove('off-screen');
-        }
-
-        comparatorContext.save();
         comparatorContext.clearRect(0, 0, width, height);
         comparatorContext.putImageData(comparatorFrame, 0, 0);
-        comparatorContext.restore();
 
-        compositorContext.save();
         compositorContext.clearRect(0, 0, width, height);
         compositorContext.drawImage(comparatorHandle, 0, 0, width, height);
         compositorContext.globalCompositeOperation = "source-out";
