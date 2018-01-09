@@ -1,5 +1,5 @@
 let createMask = function (input1, input2, output, width, height, threshold) {
-    let white = [255, 255, 255, 255];
+    let transparent = [0, 0, 0, 0];
     let black = [0, 0, 0, 255];
 
     if (input1.length !== input2.length) {
@@ -19,7 +19,7 @@ let createMask = function (input1, input2, output, width, height, threshold) {
 
             if (delta > maxDelta) {
                 if (output) {
-                    drawPixel(output, position, white);
+                    drawPixel(output, position, transparent);
                 }
             } else if (output) {
                 drawPixel(output, position, black);

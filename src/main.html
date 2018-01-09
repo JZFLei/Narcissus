@@ -4,25 +4,22 @@
         <title>Narcissus</title>
         <meta charset="utf-8" />
 
-        <link rel="stylesheet" type="text/css" href="css/helpers.css" />
-        <link rel="stylesheet" type="text/css" href="css/app.css" />
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
     </head>
 
     <body>
+        <!--
         <div class="off-screen">
-            <video id="camera"></video>
+            <canvas id="reference"></canvas>
+            <canvas id="background"></canvas>
             <canvas id="converter"></canvas>
-
-            <canvas id="masker"></canvas>
+            <canvas id="comparator"></canvas>
             <canvas id="compositor"></canvas>
         </div>
-
-        <!-- TODO: Uncomment when ready.
-        <canvas id="stream"></canvas>
         -->
 
-
-        <canvas id="comparator"></canvas>
+        <video id="camera" class="feed"></video>
+        <video id="stream" class="off-screen"></video>
 
         <!-- Overlay Menu -->
         <div id="menu">
@@ -36,17 +33,17 @@
             </div>
 
             <div>
-                <h4>Select Background</h4>
+                <h4>Select Background Image</h4>
                 <div>
-                    <img id="background-preview" />
+                    <img id="background-image" class="menu-image" />
                 </div>
-                <button id="select-background" type="button">Choose</button>
+                <input id="input-background" type="file" accept="image/*" />
             </div>
 
             <div>
-                <h4>Take Reference Photo</h4>
+                <h4>Take Reference Image</h4>
                 <div>
-                    <canvas id="reference"></canvas>
+                    <img id="reference-image" class="menu-image" />
                 </div>
                 <button id="take-reference" type="button">Capture</button>
             </div>

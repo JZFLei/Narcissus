@@ -26,12 +26,16 @@ let activateCamera = function (deviceId, element) {
             width: {
                 min: 854,
                 ideal: 1280,
-                max: 1920
+                max: 1280
             },
             height: {
                 min: 480,
                 ideal: 720,
-                max: 1080
+                max: 720
+            },
+            framerate: {
+                ideal: 30,
+                max: 30
             }
         }
     }

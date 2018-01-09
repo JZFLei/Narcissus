@@ -11,14 +11,14 @@ let mainWindow;
 
 let createWindow = function () {
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
-        minWidth: 800,
-        minHeight: 600
+        width: 1280,
+        height: 720,
+        minWidth: 854,
+        minHeight: 480
     });
 
     mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'app.html'),
+        pathname: path.join(__dirname, 'main.html'),
         protocol: 'file:',
         slashes: true
     }));
