@@ -1,0 +1,14 @@
+{
+    "verifyConfig": true,
+    "archiveOutput": true,
+    "platforms": ["win32"],
+    "uglifyList": [],
+    "ignoreList": [],
+    "versionString": {
+        "CompanyName": "Jason Zi Feng Lei",
+        "FileDescription": "Narcissus",
+        "OriginalFilename": "Narcissus",
+        "ProductName": "Narcissus",
+        "InternalName": "Narcissus"
+    }
+}

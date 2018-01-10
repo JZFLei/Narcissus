@@ -1,0 +1,18 @@
+{
+	"name": "narcissus",
+	"version": "1.0.1",
+	"description": "Narcissus is an awesome background removal software made with love!",
+	"main": "app.js",
+	"scripts":
+	{
+		"start": "electron . --allow-file-access-from-files"
+	},
+	"author": "Jason Zi Feng Lei",
+	"license": "ISC",
+	"devDependencies":
+	{
+		"electron": "^1.7.10"
+	},
+	"dependencies":
+	{}
+}
