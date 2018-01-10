@@ -17,7 +17,7 @@ let createWindow = function () {
         minHeight: 480
     });
 
-    mainWindow.setMenu(null);
+    //mainWindow.setMenu(null);
 
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'main.html'),

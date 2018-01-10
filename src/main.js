@@ -98,8 +98,6 @@ setTimeout(function() {
         referenceHandle.width = width, referenceHandle.height = height;
         backgroundHandle.width = width, backgroundHandle.height = height;
 
-        converterContext.drawImage(cameraHandle, 0, 0, width, height);
-
         // Disable loading overlay.
         document.getElementById('loading').classList.remove('active');
 

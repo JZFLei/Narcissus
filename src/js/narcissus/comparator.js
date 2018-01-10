@@ -1,5 +1,5 @@
 let createMask = function (input1, input2, output, width, height, threshold) {
-    let transparent = [0, 0, 0, 0];
+    let transparent = [255, 255, 255, 0];
     let black = [0, 0, 0, 255];
 
     if (input1.length !== input2.length) {
@@ -32,13 +32,13 @@ let calculateColourDelta = function (input1, input2, position1, position2) {
     let alpha1 = input1[position1 + 3] / 255;
     let alpha2 = input2[position2 + 3] / 255;
 
-    let red1 = blendWithWhite(input1[position1 + 0], alpha1);
-    let green1 = blendWithWhite(input1[position1 + 1], alpha1);
-    let blue1 = blendWithWhite(input1[position1 + 3], alpha1);
+    let red1 = blend(input1[position1 + 0], alpha1);
+    let green1 = blend(input1[position1 + 1], alpha1);
+    let blue1 = blend(input1[position1 + 3], alpha1);
 
-    let red2 = blendWithWhite(input2[position2 + 0], alpha2);
-    let green2 = blendWithWhite(input2[position2 + 1], alpha2);
-    let blue2 = blendWithWhite(input2[position2 + 2], alpha2);
+    let red2 = blend(input2[position2 + 0], alpha2);
+    let green2 = blend(input2[position2 + 1], alpha2);
+    let blue2 = blend(input2[position2 + 2], alpha2);
 
     let percievedLuminance = rgb2y(red1, green1, blue1) - rgb2y(red2, green2, blue2);
     let colourInformation = rgb2i(red1, green1, blue1) - rgb2i(red2, green2, blue2);
@@ -59,7 +59,7 @@ let rgb2q = function (red, green, blue) {
     return red * 0.21147017 - green * 0.52261711 + blue * 0.31114694;
 }
 
-let blendWithWhite = function (colour, alpha) {
+let blend = function (colour, alpha) {
     return 255 + (colour - 255) * alpha;
 }
 
