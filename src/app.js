@@ -9,37 +9,39 @@ const BrowserWindow = electron.BrowserWindow;
 
 let mainWindow;
 
-let createWindow = function () {
-    mainWindow = new BrowserWindow({
-        width: 1280,
-        height: 720,
-        minWidth: 854,
-        minHeight: 480
-    });
+let createWindow = function() {
+  mainWindow = new BrowserWindow({
+    width: 1280,
+    height: 720,
+    minWidth: 854,
+    minHeight: 480,
+  });
 
-    mainWindow.setMenu(null);
+  mainWindow.setMenu(null);
 
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'main.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
+  mainWindow.loadURL(
+    url.format({
+      pathname: path.join(__dirname, 'main.html'),
+      protocol: 'file:',
+      slashes: true,
+    }),
+  );
 
-    mainWindow.on('closed', () => {
-        mainWindow = null;
-    });
-}
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
+};
 
 app.on('ready', createWindow);
 
 app.on('windows-all-closed', () => {
-    if (process.platform != 'darwin') {
-        app.quit();
-    }
+  if (process.platform != 'darwin') {
+    app.quit();
+  }
 });
 
 app.on('activate', () => {
-    if (mainWindow === null) {
-        createWindow();
-    }
+  if (mainWindow === null) {
+    createWindow();
+  }
 });

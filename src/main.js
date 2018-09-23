@@ -47,62 +47,64 @@ let thresholdValue = parseInt(thresholdValueHandle.value);
 
 // Entry.
 setTimeout(function() {
-    // Camera.
-    if (cameraList.length > 0) {
-        for (let i = 0; i < cameraList.length; i++) {
-            let option = document.createElement('option');
+  // Camera.
+  if (cameraList.length > 0) {
+    for (let i = 0; i < cameraList.length; i++) {
+      let option = document.createElement('option');
 
-            option.value = cameraList[i].deviceId;
-            option.text = cameraList[i].label || 'Camera ' + (i + 1);
+      option.value = cameraList[i].deviceId;
+      option.text = cameraList[i].label || 'Camera ' + (i + 1);
 
-            cameraListHandle.add(option);
-        }
-
-        cameraSelected = cameraListHandle.options[cameraListHandle.selectedIndex].value;
-        activateCamera(cameraSelected, cameraHandle);
+      cameraListHandle.add(option);
     }
 
-    cameraListHandle.addEventListener('input', function () {
-        cameraSelected = cameraListHandle.options[cameraListHandle.selectedIndex].value;
-        activateCamera(cameraSelected, cameraHandle);
-    });
+    cameraSelected =
+      cameraListHandle.options[cameraListHandle.selectedIndex].value;
+    activateCamera(cameraSelected, cameraHandle);
+  }
 
-    // Reference.
-    referenceButton.addEventListener('click', function () {
-        let count = referenceDelay;
+  cameraListHandle.addEventListener('input', function() {
+    cameraSelected =
+      cameraListHandle.options[cameraListHandle.selectedIndex].value;
+    activateCamera(cameraSelected, cameraHandle);
+  });
 
-        let referenceCountdown = setInterval(function () {
-            document.getElementById('countdown').innerHTML = count;
+  // Reference.
+  referenceButton.addEventListener('click', function() {
+    let count = referenceDelay;
 
-            if (count === 0) {
-                clearInterval(referenceCountdown);
-                document.getElementById('countdown').innerHTML = '';
+    let referenceCountdown = setInterval(function() {
+      document.getElementById('countdown').innerHTML = count;
 
-                referenceContext.drawImage(converterHandle, 0, 0, width, height);
-                referenceImage.src = referenceHandle.toDataURL();
-                referenceTaken = true;
-            } else {
-                count--;
-            }
-        }, 1000);
-    });
+      if (count === 0) {
+        clearInterval(referenceCountdown);
+        document.getElementById('countdown').innerHTML = '';
 
-    // Loop Entry.
-    cameraHandle.addEventListener('loadedmetadata', function () {
-        width = cameraHandle.videoWidth;
-        height = cameraHandle.videoHeight;
+        referenceContext.drawImage(converterHandle, 0, 0, width, height);
+        referenceImage.src = referenceHandle.toDataURL();
+        referenceTaken = true;
+      } else {
+        count--;
+      }
+    }, 1000);
+  });
 
-        converterHandle.width = width, converterHandle.height = height;
-        comparatorHandle.width = width, comparatorHandle.height = height;
-        compositorHandle.width = width, compositorHandle.height = height;
-        referenceHandle.width = width, referenceHandle.height = height;
-        backgroundHandle.width = width, backgroundHandle.height = height;
+  // Loop Entry.
+  cameraHandle.addEventListener('loadedmetadata', function() {
+    width = cameraHandle.videoWidth;
+    height = cameraHandle.videoHeight;
 
-        // Disable loading overlay.
-        document.getElementById('loading').classList.remove('active');
+    (converterHandle.width = width), (converterHandle.height = height);
+    (comparatorHandle.width = width), (comparatorHandle.height = height);
+    (compositorHandle.width = width), (compositorHandle.height = height);
+    (referenceHandle.width = width), (referenceHandle.height = height);
+    (backgroundHandle.width = width), (backgroundHandle.height = height);
 
-        beginLoops();
-    });
+    // Disable loading overlay.
+    document.getElementById('loading').classList.remove('active');
+
+    beginLoops();
+  });
 }, 1000);
 
 // Loops.
@@ -110,89 +112,97 @@ let post;
 let ui;
 
 // Begin loops.
-let beginLoops = function () {
-    post = post || requestAnimationFrame(postProcessLoop);
-    ui = ui || requestAnimationFrame(uiLoop);
-}
+let beginLoops = function() {
+  post = post || requestAnimationFrame(postProcessLoop);
+  ui = ui || requestAnimationFrame(uiLoop);
+};
 
-let uiLoop = function () {
-    ui = requestAnimationFrame(uiLoop);
+let uiLoop = function() {
+  ui = requestAnimationFrame(uiLoop);
 
-    if (!referenceTaken) {
-        thresholdTitleHandle.classList.add('disabled');
-        thresholdValueHandle.classList.add('disabled');
-    } else {
-        thresholdTitleHandle.classList.remove('disabled');
-        thresholdValueHandle.classList.remove('disabled');
+  if (!referenceTaken) {
+    thresholdTitleHandle.classList.add('disabled');
+    thresholdValueHandle.classList.add('disabled');
+  } else {
+    thresholdTitleHandle.classList.remove('disabled');
+    thresholdValueHandle.classList.remove('disabled');
 
-        if (streamHandle.classList.contains('off-screen')) {
-            cameraHandle.classList.add('off-screen');
-            cameraHandle.classList.remove('feed');
-            streamHandle.classList.add('feed');
-            streamHandle.classList.remove('off-screen');
-        }
-
-        thresholdValue = thresholdValueHandle.value;
+    if (streamHandle.classList.contains('off-screen')) {
+      cameraHandle.classList.add('off-screen');
+      cameraHandle.classList.remove('feed');
+      streamHandle.classList.add('feed');
+      streamHandle.classList.remove('off-screen');
     }
 
-    $(document).mousemove(function(event) {
-        if (event.pageX < 304) {
-            if (document.getElementById('menu').classList.contains('closed')) {
-                document.getElementById('menu').classList.remove('closed');
-            }
-        } else {
-            if (!document.getElementById('menu').classList.contains('closed')) {
-                document.getElementById('menu').classList.add('closed');
-            }
-        }
-    });
-}
+    thresholdValue = thresholdValueHandle.value;
+  }
+
+  $(document).mousemove(function(event) {
+    if (event.pageX < 304) {
+      if (document.getElementById('menu').classList.contains('closed')) {
+        document.getElementById('menu').classList.remove('closed');
+      }
+    } else {
+      if (!document.getElementById('menu').classList.contains('closed')) {
+        document.getElementById('menu').classList.add('closed');
+      }
+    }
+  });
+};
 
 // Post Process.
-let postProcessLoop = function () {
-    post = requestAnimationFrame(postProcessLoop);
+let postProcessLoop = function() {
+  post = requestAnimationFrame(postProcessLoop);
 
-    // Background.
-    backgroundInput.onchange = function (event) {
-        let image = new Image();
-        image.src = URL.createObjectURL(event.target.files[0]);
-        image.onload = function () {
-            backgroundContext.drawImage(image, 0, 0, width, height);
-            backgroundImage.src = backgroundHandle.toDataURL();
-            backgroundSelected = true;
-        }
+  // Background.
+  backgroundInput.onchange = function(event) {
+    let image = new Image();
+    image.src = URL.createObjectURL(event.target.files[0]);
+    image.onload = function() {
+      backgroundContext.drawImage(image, 0, 0, width, height);
+      backgroundImage.src = backgroundHandle.toDataURL();
+      backgroundSelected = true;
+    };
+  };
+
+  // Converter.
+  converterContext.clearRect(0, 0, width, height);
+  converterContext.drawImage(cameraHandle, 0, 0, width, height);
+
+  // Comparator and masker.
+  if (referenceTaken) {
+    let referenceFrame = referenceContext.getImageData(0, 0, width, height);
+    let converterFrame = converterContext.getImageData(0, 0, width, height);
+    let comparatorFrame = comparatorContext.createImageData(width, height);
+
+    createMask(
+      referenceFrame.data,
+      converterFrame.data,
+      comparatorFrame.data,
+      width,
+      height,
+      thresholdValue,
+    );
+
+    comparatorContext.clearRect(0, 0, width, height);
+    comparatorContext.putImageData(comparatorFrame, 0, 0);
+
+    compositorContext.clearRect(0, 0, width, height);
+    compositorContext.drawImage(comparatorHandle, 0, 0, width, height);
+    compositorContext.globalCompositeOperation = 'source-out';
+    compositorContext.drawImage(converterHandle, 0, 0, width, height);
+
+    if (backgroundSelected) {
+      compositorContext.globalCompositeOperation = 'destination-over';
+      compositorContext.drawImage(backgroundHandle, 0, 0, width, height);
     }
 
-    // Converter.
-    converterContext.clearRect(0, 0, width, height);
-    converterContext.drawImage(cameraHandle, 0, 0, width, height);
-
-    // Comparator and masker.
-    if (referenceTaken) {
-        let referenceFrame = referenceContext.getImageData(0, 0, width, height);
-        let converterFrame = converterContext.getImageData(0, 0, width, height);
-        let comparatorFrame = comparatorContext.createImageData(width, height);
-
-        createMask(referenceFrame.data, converterFrame.data, comparatorFrame.data, width, height, thresholdValue);
-
-        comparatorContext.clearRect(0, 0, width, height);
-        comparatorContext.putImageData(comparatorFrame, 0, 0);
-
-        compositorContext.clearRect(0, 0, width, height);
-        compositorContext.drawImage(comparatorHandle, 0, 0, width, height);
-        compositorContext.globalCompositeOperation = "source-out";
-        compositorContext.drawImage(converterHandle, 0, 0, width, height);
-
-        if (backgroundSelected) {
-            compositorContext.globalCompositeOperation = "destination-over";
-            compositorContext.drawImage(backgroundHandle, 0, 0, width, height);
-        }
-
-        compositorContext.globalCompositeOperation = "source-over";
-    }
-}
+    compositorContext.globalCompositeOperation = 'source-over';
+  }
+};
 
 let outputStream = compositorHandle.captureStream();
 
 streamHandle.src = URL.createObjectURL(outputStream);
+
 streamHandle.play();
